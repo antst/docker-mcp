@@ -192,3 +192,37 @@ class DockerHandlers:
         except Exception as e:
             debug_output = "\n".join(debug_info)
             return [TextContent(type="text", text=f"Error listing containers: {str(e)}\n\nDebug Information:\n{debug_output}")]
+
+    @staticmethod
+    async def handle_stop_container(arguments: Dict[str, Any]) -> List[TextContent]:
+        debug_info = []
+        try:
+            container_name = arguments.get("container_name")
+            if not container_name:
+                raise ValueError("Missing required container_name")
+
+            debug_info.append(f"Stopping container '{
+                              container_name}'")
+            logs = await asyncio.to_thread(docker_client.container.stop, container_name)
+
+            return [TextContent(type="text", text=f"Stopped container '{container_name}':\n{logs}\n\nDebug Info:\n{chr(10).join(debug_info)}")]
+        except Exception as e:
+            debug_output = "\n".join(debug_info)
+            return [TextContent(type="text", text=f"Error stopping: {str(e)}\n\nDebug Information:\n{debug_output}")]
+        
+    @staticmethod
+    async def handle_start_container(arguments: Dict[str, Any]) -> List[TextContent]:
+        debug_info = []
+        try:
+            container_name = arguments.get("container_name")
+            if not container_name:
+                raise ValueError("Missing required container_name")
+
+            debug_info.append(f"Starting container '{
+                              container_name}'")
+            logs = await asyncio.to_thread(docker_client.container.start, container_name)
+
+            return [TextContent(type="text", text=f"Started container '{container_name}':\n{logs}\n\nDebug Info:\n{chr(10).join(debug_info)}")]
+        except Exception as e:
+            debug_output = "\n".join(debug_info)
+            return [TextContent(type="text", text=f"Error starting: {str(e)}\n\nDebug Information:\n{debug_output}")]
