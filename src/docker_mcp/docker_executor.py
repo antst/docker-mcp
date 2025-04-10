@@ -100,3 +100,9 @@ class DockerComposeExecutor(DockerExecutorBase):
 
     async def ps(self) -> Tuple[int, str, str]:
         return await self.run_command("ps")
+    
+    async def stop(self) -> Tuple[int, str, str]:
+        return await self.run_command("stop")
+    
+    async def start(self) -> Tuple[int, str, str]:
+        return await self.run_command("start")
